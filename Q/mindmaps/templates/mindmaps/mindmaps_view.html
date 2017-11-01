@@ -1,0 +1,51 @@
+{% extends "mindmaps/mindmaps_base.html" %}
+
+{% load staticfiles %}
+
+{% block scripts %}
+    <script language="javascript">
+
+        function giveFocus() {
+            document.visorFreeMind.focus();
+        };
+
+        var flashobject = new FlashObject("{%static 'mindmaps/js/ext/visorFreemind.swf' %}", "visorFreeMind", "100%", "100%", 6, "#9999ff");
+
+     </script>
+{% endblock %} {# /scripts #}
+
+{% block title %}
+
+    ES-DOC MindMap Viewer
+
+{% endblock %} {# /title #}
+
+{% block content %}
+
+    <div class="title">
+        ES-DOC MindMap Viewer
+    </div> <!-- /.title -->
+
+    <div class="documentation">
+        This application allows users to quickly view an ES-DOC Specialization in MindMap format.<br/>
+        For a more fully-featured mindmap browser, we recommend either installing <a href="http://freemind.sourceforge.net/wiki/index.php/Main_Page#Download_and_install">FreeMind</a>
+        or registering for <a href="https://www.mindmup.com/">MindMup</a>.
+        <p>
+            This mindmap file can be found at: <a href="{{ mindmap_url }}">{{ mindmap_url }}</a>.
+        </p>
+    </div>
+
+    <fieldset>
+        <div class="fieldset_content">
+
+            <div id="flashcontent" onmouseover="giveFocus();">
+	            Flash plugin or Javascript are turned off or otherwise unavailable. Activate both and reload to view the MindMap.
+            </div>
+            <script type="text/javascript">
+                render_mindmap_to_flashobject(flashobject,"{{ mindmap_relative_path }}");
+	        </script>
+        </div>
+    </fieldset>
+
+{% endblock %} {# /content #}
+

@@ -1,0 +1,141 @@
+/* q_base.less */
+
+/***********************/
+/* these are my styles */
+/***********************/
+
+/* I mostly use bootstrap, but customize stuff below (which is why I don't use a CDN)*/
+/* bootstrap recently released v4-beta, but I'm not using it b/c it is too hard to customize */
+/* I use LESS b/c it is better than CSS; I don't use SASS (which is even better) b/c bootstrap v3+ doesn't */
+
+/* original bootstrap stuff */
+@import "bootstrap/bootstrap.less";
+/* custom Q variables */
+@import "q_variables.less";
+/* redefine some ng stuff */
+@import "q_ng.less";
+/* redefine some bootstrap stuff */
+@import "q_bootstrap.less";
+
+/*************************************/
+/* first deal w/ some site-wide things */
+/*************************************/
+
+#site {
+    .row;
+    .alert;
+    .alert-danger;
+    .text-center;
+}
+
+.voffset-2  { margin-top: 2px !important; }
+.voffset-4  { margin-top: 4px !important; }
+.voffset-8  { margin-top: 8px !important; }
+.voffset-12 { margin-top: 12px !important; }
+.voffset-16 { margin-top: 16px !important; }
+
+/**********************************/
+/* now deal w/ the actual content */
+/**********************************/
+
+#questionnaire {
+
+    .header {
+
+        div:nth-child(1) { .text-left; }
+        div:nth-child(2) { .text-center; }
+        div:nth-child(3) { .text-right; }
+
+        img#logo { width: 200px; }
+    }  /* /#header */
+
+    .footer {
+        .text-center;
+        font-style: italic;
+        font-size: 90%;
+        margin-top: 12px;
+        border-top: 1px solid @brand-info;
+        clear: both;
+
+        img#logo { height: 96px; width: 96px; }
+    }  /* /#footer */
+
+    .content {
+
+        .title {
+            .lead;
+            .text-primary;
+            .text-center;
+            a {
+                color: inherit !important;
+            }
+        }
+
+        .documentation {
+            padding: 8px;
+            font-style: italic;
+            font-weight: normal !important;  /* ensures documentation is not bolded w/in required fields */
+        }
+
+        .info {
+            background: @alert-warning-bg;
+            border: 2px solid @alert-warning-border;
+            padding: 4px;
+            margin-top: 8px;
+            margin-bottom: 8px;
+            font-style: oblique;
+        }
+
+        .error {
+            color: @brand-danger;
+            padding: 4px;
+        }
+
+        .help {
+            p {
+                padding-left: 4px;
+                font-size: 90%;
+            }
+            .glyphicon:hover {
+                color: @brand-primary;
+            }
+        }
+
+        /* begin pretty tables & forms */
+
+        textarea.form-control {
+            resize: vertical;
+        }
+
+        input.form-control {
+
+        }
+
+        select.form-control {
+
+        }
+
+        .odd {
+            .border-radius(@border-radius);
+            background-color: lighten(@gray-base, 98%);
+        }
+
+        .even {
+            .border-radius(@border-radius);
+            background-color: lighten(@gray-base, 92%);
+        }
+
+        .required {
+            font-weight: bold;
+        }
+
+        .optional {
+            font-weight: normal;
+        }
+
+        /* end pretty tables */
+
+    }  /* /.content */
+
+}  /* /#questionnaire */
+

@@ -1,0 +1,20 @@
+{# q_base_narrow.html #}
+
+{# this template places all the content in a narrow box #}
+{# it is used for all templates apart from "project", "customize", "view", & "edit" #}
+
+{% extends "questionnaire/q_base.html" %}
+
+{% block outer-content %}
+
+    <div class="col-md-2"></div>
+
+    <div class="col-md-8">
+        {% block content %}
+            you forgot to add content!
+        {% endblock %}  {# /content #}
+  </div>
+
+  <div class="col-md-2"></div>
+
+{% endblock %} {# /outer-content #}

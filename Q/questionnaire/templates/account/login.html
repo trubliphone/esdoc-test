@@ -1,0 +1,97 @@
+{% extends "questionnaire/q_base.html" %}
+
+{% load i18n %}
+{% load account socialaccount %}
+{% load q_tags %}
+
+{% block user %}
+  <!-- no user section needed for account pages -->
+{% endblock %}  {# /user #}
+
+{% block content %}
+
+    <div class="title">
+        Please login to the ES-DOC Questionnaire
+    </div> <!-- /#title -->
+
+    <div class="col-md-2"></div>
+
+    <div class="col-md-8">
+
+      <div class="documentation">
+          Please use this form to sign into the ES-DOC Questionnaire.
+          <p>Need an account?  Then please <a href="{% url 'account_signup' %}">sign up</a>.</p>
+          <p class="info">For the best experience, please use Firefox or Chrome.  These are the browsers we support.</p>
+      </div>
+
+      {% get_providers as socialaccount_providers %}
+      {# TODO: ENABLE/DISABLE "allauth.socialaccount.providers.x" AS NEEDED #}
+      {% if socialaccount_providers %}
+        <div class="documentation">
+            <p>Please sign in with one of your existing third party accounts:</p>
+
+            <div class="socialaccount_ballot">
+
+                <ul class="socialaccount_providers">
+                    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+                </ul>
+
+            </div>
+
+            {% include "socialaccount/snippets/login_extra.html" %}
+
+            <p>or...</p>
+
+        </div>
+      {% endif %}  {# /social_account_providers #}
+
+      <form class="login" method="POST" action="{% url 'account_login' %}">
+
+          {% csrf_token %}
+
+          {# the Q tends to explicitly store this item on the request object #}
+          {# but allauth embeds it in forms like this #}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+
+
+          <table class="table">
+              {% if form.non_field_errors %}
+                  <tr>
+                      <td colspan="2">
+                        <div class="error_wrapper alert alert-danger" role="alert">
+                            {{ form.non_field_errors }}
+                        </div>
+                    </td>
+                </tr>
+            {% endif %}
+            {% for field in form|get_fields_by_names:"login,password" %}
+                <tr class="{% cycle 'odd' 'even' %}">
+                    <td>
+                        <span class="required">{{ field.label }}:&nbsp;</span>
+                    </td>
+                    <td>
+                        {{ field }}
+                        {% if field.errors %}
+                            &nbsp;&nbsp;
+                            <!--{% include 'questionnaire/_q_error.html' %}-->
+                        {% endif %} {# / field.errors #}
+                    </td>
+                </tr>
+            {% endfor %} {# /field #}
+        </table>
+
+        <div>
+            <a class="button" href="{% url 'account_reset_password' %}">Forgot Password?</a>
+        </div>
+
+        <div class="submit voffset-8">
+            <input type="submit" value="submit" class="btn btn-primary"/>
+        </div> <!-- /.submit -->
+
+      </form>
+
+  </div>
+
+  <div class="col-md-2"></div>
+
+{% endblock %}

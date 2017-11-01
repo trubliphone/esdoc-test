@@ -1,0 +1,187 @@
+{# q_base.html #}
+
+{% load staticfiles %}
+{% load compress %}
+{% load q_tags %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+    {% block head %}
+
+        <head>
+
+            <!-- Required meta tags -->
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+            <!-- icon -->
+            <link rel="shortcut icon" href="{% static 'questionnaire/images/favicon.ico' %}" />
+
+            <!-- title -->
+            <title>
+                {% block title %}  ES-DOC Questionnaire {% endblock %}  {# /title #}
+            </title>
+
+            <!-- style -->
+            {% block style %}
+                {% if cdn %}
+                    <!-- not using CDN for bootstrap, b/c I re-define my own styles (based on bootstrap) below -->
+                    <!-- <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+                    <!-- <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> -->
+                {% else %}
+                {% endif %}  {# /cdn #}
+                {% compress css %}
+                    <link rel="stylesheet" type="text/less" media="all" href="{% static 'questionnaire/styles/q_base.less' %}" />
+                {% endcompress %}
+            {% endblock %}  {# /style #}
+
+            <!-- scripts -->
+            {% block scripts %}
+                <!-- TODO: SHOULD THIS BE MOVED TO THE BOTTOM OF THE PAGE? -->
+                {% if cdn %}
+                    <script src="//code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+                    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"></script>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.6.6/angular-sanitize.min.js" integrity="sha256-zfJPgQ2q1sgTMVjlfR+txmTxEJC1lS853rSACpkN8jY=" crossorigin="anonymous"></script>
+                    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+                    <script src="//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js" integrity="sha256-4F7e4JsAJyLUdpP7Q8Sah866jCOhv72zU5E8lIRER4w=" crossorigin="anonymous"></script>
+                {% else %}
+                    <script type="text/javascript" src="{% static 'questionnaire/scripts/jquery-3.2.1.min.js' %}"></script>
+                    <script type="text/javascript" src="{% static 'questionnaire/scripts/angular-1.6.6.min.js' %}"></script>
+                    <script type="text/javascript" src="{% static 'questionnaire/scripts/angular-sanitize-1.6.6.min.js' %}"></script>
+                    <script type="text/javascript" src="{% static 'questionnaire/scripts/bootstrap-3.3.7.min.js' %}"></script>
+                    <script type="text/javascript" src="{% static 'questionnaire/scripts/bootbox.min.js' %}"></script>
+                {% endif %}  {# /cdn #}
+                {% compress js %}
+                    <script type="text/javascript" src="{% static 'questionnaire/scripts/q_base.js' %}"></script>
+                    <script type="text/javascript" src="{% static 'questionnaire/scripts/q_ng_base.js' %}"></script>
+                    <script language="javascript" type="text/javascript">
+                        var RESERVED_WORDS = {% reserved_words %};
+                        var PROFANITIES_LIST = {% profanities %};
+
+                        /* (re)define a few fns which may not exist... */
+
+                        /* javascript indexOf */
+                        Array.prototype.indexOf = function(obj, start) {
+                             for (var i = (start || 0), j = this.length; i < j; i++) {
+                                 if (this[i] === obj) { return i; }
+                             }
+                             return -1;
+                         }
+
+                         /* jquery exists */
+                        $.fn.exists = function() {
+                            return this.length != 0;
+                        }
+
+                        $(document).ready(
+                            function() {
+
+                                /* in old versions of the Q there was loads of long & complex JQuery code to setup all the interactivity */
+                                /* now there are only a small number of fns (defined in "q_base.js"), and those are written very efficiently */
+                                /* hooray! */
+
+                                var parent = document.body;
+                                init_widgets(helps, $(parent).find(".help.glyphicon"));
+                            }
+                        );
+
+                    </script>
+                {% endcompress %}
+            {% endblock %}  {# /scripts #}
+
+        </head>
+
+    {% endblock %}  {# /head #}
+
+    {% block body %}
+
+        <body>
+
+            <div id="questionnaire" class="container-fluid">
+
+                {% block site %}
+                    {# adds notification for non-PRODUCTION sites #}
+                    <div id="site">
+                        {% if request.current_site|site_type != "PROD" %}
+                            This is <strong>not</strong> a production site.&nbsp;&nbsp;Data may periodically be reset.
+                        {% endif %}  {# /site_type != "PROD" #}
+                    </div>  <!-- /#site -->
+                {% endblock %} {# /site #}
+
+                {% block messages %}
+                    <div id="lil_msg" class="bb-alert" style="display: none;"></div>
+                    <script language="JavaScript">
+                        check_msg();
+                    </script>
+                {% endblock %} {# /messages #}
+
+                <div class="header row">
+
+                    {% block header %}
+
+                        <div class="col-md-2">
+                            {% block logo %}
+                                <a href="/" title="ES-DOC Questionnaire Home"><img id="logo" src="{% static 'questionnaire/images/esdoc_logo.png' %}"/></a>
+                            {% endblock %}  {# /logo #}
+                        </div>
+
+                        <div class="col-md-8">
+                            {% block spacer %}
+                                <!-- nothing to see here -->
+                            {% endblock %}  {# /spacer #}
+                        </div>
+
+                        <div class="col-md-2">
+                            {% block user %}
+                                <!-- default user login/logout block -->
+                                {% with user=request.user %}  {# make sure to get user from request; b/c some templates pass their own "user" variable #}
+                                    {% if user.is_authenticated %}
+                                        <span>welcome: <strong><a title="view profile" href="/accounts/profile/{{ user }}/">{{ user }}</a></strong>&nbsp;</span>
+                                        <a id="signout" class="label label-primary" title="sign out" href="{% url 'account_logout' %}?next={{ request.path }}">sign out</a>
+                                    {% else %}
+                                        <a id="signin" class="label label-default" title="sign in" href="{% url 'account_login' %}?next={{ request.path }}">sign in</a>
+                                        <a id="signup" class="label label-primary" title="sign up" href="{% url 'account_signup' %}?next={{ request.path }}">sign up</a>
+                                    {% endif %}
+                                {% endwith %}  {# /user #}
+                            {% endblock %}  {# /user #}
+                        </div>
+
+                    {% endblock %}  {# /header #}
+
+                </div>  <!-- /.header.row -->
+
+                <div class="content row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10">
+                        {% block outer-content %}
+                            {% block content %}
+                                you forgot to add content!
+                            {% endblock %}  {# /content #}
+                        {% endblock %}  {# /outer-content #}
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>  <!-- /.content.row -->
+
+                <div class="footer row">
+
+                    {% block footer %}
+
+                        <div class="col-md-12">
+                            This form is generated by the <a target="_blank" href="{% q_url %}">ES-DOC Questionnaire</a> (v{% q_version %}).
+                            <br/>
+                            For more information please contact: <a href="mailto:{% q_email %}">{% q_email %}</a>.
+                        </div>
+
+                    {% endblock %}  {# /footer #}
+
+                </div>  <!-- /.footer.row -->
+
+            </div>  <!-- /#questionnaire.container-fluid -->
+
+        </body>
+
+    {% endblock %}  {# /body #}
+
+</html>

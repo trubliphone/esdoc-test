@@ -1,0 +1,15 @@
+/* redefining ng stuff */
+
+/* for whatever stupid reason, invalid things aren't automatically styled in boostrap */
+/* so specify my own invalid styles here */
+
+.ng-invalid-bound.ng-pristine, .ng-invalid.ng-dirty {
+    border-color: @brand-danger;
+}
+
+.form-control:focus.ng-invalid-bound.ng-pristine, .form-control:focus.ng-invalid.ng-dirty {
+    box-shadow: 0px 1px 1px  @brand-danger inset, 0px 0px 8px @brand-danger;
+}
+
+/* fix for anular ui boostrap */
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }

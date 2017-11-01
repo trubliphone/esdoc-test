@@ -1,0 +1,18 @@
+{% load account %}
+{% load q_tags %}
+
+{% user_display user as user_display %}
+
+{% autoescape off %}
+
+Greetings from the ES-DOC Questionnaire.
+
+You're receiving this email because user '{{ user_display }}' at {{ current_site }} has provided this email address to connect their account.
+
+To confirm this is correct, go to {{ activate_url }}
+
+If you believe you have received this email in error, please notify {% q_email %}.
+
+Thank you from the ES-DOC team.
+
+{% endautoescape %}

@@ -1,0 +1,73 @@
+/* redefining bootstrap stuff */
+
+/* this mixin was removed in v3 */
+
+.border-radius(@radius){
+    .border-top-radius(@radius);
+    .border-right-radius(@radius);
+    .border-bottom-radius(@radius);
+    .border-left-radius(@radius);
+}
+
+/* allow for colored wells */
+
+.well.well-primary {
+    background: @panel-primary-heading-bg;
+    color: @panel-primary-text;
+}
+
+.well.well-success {
+    background: @panel-success-heading-bg;
+    color: @panel-success-text;
+}
+
+.well.well-info {
+    background: @panel-info-heading-bg;
+    color: @panel-info-text;
+}
+
+.well.well-warning {
+    background: @panel-warning-heading-bg;
+    color: @panel-warning-text;
+}
+
+.well.well-danger {
+    background: @panel-danger-heading-bg;
+    color: @panel-danger-text;
+}
+
+
+/* allow for (isolated) colored icons */
+
+.glyphicon.glyphicon-primary {
+    color: @brand-primary;
+}
+
+.glyphicon.glyphicon-success {
+    color: @brand-success;
+}
+
+.glyphicon.glyphicon-info {
+    color: @brand-info;
+}
+
+.glyphicon.glyphicon-warning {
+    color: @brand-warning;
+}
+
+.glyphicon.glyphicon-danger {
+    color: @brand-danger;
+}
+
+/* make greyed out images _really_ greyed out */
+
+.glyphicon.text-muted {
+    opacity: 0.2;
+}
+
+/* make form elements easier to be styled ? */
+
+.form-control {
+    /* width: @form-control-width; */
+}
+

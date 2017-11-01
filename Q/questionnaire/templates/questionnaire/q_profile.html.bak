@@ -1,0 +1,126 @@
+{# q_index.html #}
+
+{% extends "questionnaire/q_base_narrow.html" %}
+
+{% load staticfiles %}
+{% load q_tags %}
+
+{% block content %}
+
+    <div class="title">
+        ES-DOC Questionnaire User
+    </div> <!-- /#title -->
+
+
+    <div class="row>">
+        <div class="cold-md-12">
+            <p>
+                Information about the ES-DOC User: <strong>{{ user }}</strong>
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            {% if not read_only %}
+                {% if not is_verified %}
+                    <table border="0">
+                        <tr>
+                            <td>
+                                <span class="glyphicon glyphicon-warning-sign"></span>
+                            </td>
+                            <td style="padding-left: 10px;">
+                                <p>
+                                    This email address has not yet been verified.
+                                    The user may be unable to access certain resources.
+                                </p>
+                                <p>
+                                    <input type="submit" name="action_send" value="resend verification" class="btn btn-xs btn-info"/>
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                {% else %}
+                    <p>
+                        <a href="{% url 'account_email' %}">change email address</a>
+                    </p>
+                {% endif %}  {# /!is_verified #}
+            {% endif %}  {# /!read_only #}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            {% if not read_only %}
+                {% if request.user == user %}
+                    <p>
+                        <a href="{% url 'account_change_password' %}">
+                            change password
+                            <span class="glyphicon glyphicon-primary glyphicon-lock"></span>
+                        </a>
+
+                    </p>
+                {% endif %}  {# /request.user == user #}
+            {% endif %}  {# /!read_only #}
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-8">
+            <form method="POST" action="{% url 'account_profile' username=user %}">
+                {% csrf_token %}
+                 <table class="table">
+                     {% if form.non_field_errors %}
+                        <tr>
+                            <td colspan="2">
+                                <div class="error_wrapper alert alert-danger" role="alert">
+                                    {{ form.non_field_errors }}
+                                </div>
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% for field in form %}
+                        <tr class="{% cycle 'odd' 'even' %}">
+                            <td>
+                                <span class="required">{{ field.label }}:&nbsp;</span>
+                            </td>
+                            <td>
+                                {{ field }}
+                                {% if field.errors %}
+                                    error
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                 </table>
+                {% if not read_only %}
+                    <input type="submit" value="update" class="btn btn-primary"/>
+                {% endif %}  {# /read_only #}
+            </form>
+        </div>
+        <div class="col-md-4">
+            <div class="list-group small">
+                <span class="list-group-item active">Project Affiliations:</span>
+                {% if projects.count %}
+                    {% for project in projects %}
+                        <li class="list-group-item">
+                            {% if user|is_admin_of:project %} <span class="badge">admin</span> {% endif %}
+                            {% if user|is_member_of:project %} <span class="badge">member</span> {% endif %}
+                            {% if user|is_user_of:project %} <span class="badge">user</span> {% endif %}
+                            <a href="/{{ project.name }}">{{ project.title }}</a>
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <li class="list-group-item">
+                        <span class="documentation text-muted">No project affiliations found.</span>
+                    </li>
+                {% endif %}  {# /projects.count #}
+            </div>
+        </div>
+    </div>
+
+
+
+
+{% endblock %}  {# /content #}
