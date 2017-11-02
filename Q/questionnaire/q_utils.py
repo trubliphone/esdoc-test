@@ -806,3 +806,7 @@ def validate_file_extension(value, valid_extensions):
 #         json_validate(value, schema)
 #     except JSONValidationError as e:
 #         raise ValidationError(e.message)
+
+def validate_not_bar(value):
+    if value == "bar":
+        raise ValidationError("Value cannot be bar.")

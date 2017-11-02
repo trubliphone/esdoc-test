@@ -22,11 +22,10 @@
     /* RUN */
     /*******/
 
-//    app.run(function($rootScope) {
+//    app.run(["$rootScope", function($rootScope) {
 //        /* in theory, factories are preferred for global functionality */
 //        /* b/c they isolate scope, but this is still sometimes useful */
-//
-//    });
+//    }]);
 
     /*************/
     /* FACTORIES */
@@ -39,10 +38,6 @@
     /***************/
     /* CONTROLLERS */
     /***************/
-
-    /************************/
-    /* top level controller */
-    /************************/
 
     /* don't generally need $scope for ng > 1.3 */
     /* except for the built-in scope fns (like $watch, $apply, etc.) */
@@ -97,6 +92,7 @@
             function (is_loaded) {
                 if (is_loaded) {
                     user_controller.is_loaded = true;
+
                     /* now that the model is loaded, we can do stuff... */
 
                     user_controller.fields = [
@@ -115,9 +111,15 @@
                             validators: [
                                 {
                                     "name": "notfoo",
-                                    "fn": validate_not_foo,
-                                    "msg": "<span class='glyphicon glyphicon-remove'/> you can't be foo!",
+                                    "fn_name": "validate_not_foo",
+                                    "msg": "<span class='glyphicon glyphicon-remove'/> you can't be foo!<br/>(I am a <em>synchronous</em> validator)",
                                     "asynchronous": false
+                                },
+                                {
+                                    "name": "notbar",
+                                    "fn_name": "validate_not_bar",
+                                    "msg": "<span class='glyphicon glyphicon-remove'/>you can't be bar!<br/>(I am an <em>asynchronous</em> validator)",
+                                    "asynchronous": true
                                 }
                             ]
                         },
@@ -170,23 +172,6 @@
                 }
             }
         );
-
-
-        user_controller.validators = {
-            "first_name" : [
-//                {
-//                    "name": "server",
-//                    "fn":  validate_servererror,
-//                    "msg": "msg one",
-//                    "asynchronous": true,
-//                },
-                {
-                    "name": "notfoo",
-                    "fn": validate_not_foo,
-                    "msg": "<span class='glyphicon glyphicon-remove'/> you can't be foo!"
-                }
-            ]
-        };
 
         user_controller.resend_verification = function() {
             var resend_verification_url = "/services/accounts/send_email_confirmation/";

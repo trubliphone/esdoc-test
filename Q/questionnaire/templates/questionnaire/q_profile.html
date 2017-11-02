@@ -114,7 +114,7 @@
                                                placeholder="{{ field.placeholder }}"
                                                ng-disabled="!field.is_editable"
                                                ng-model="propertify('user_controller.' + field.model)" ng-model-options="{ getterSetter: true }"
-                                               validators="field.validators"
+                                               qvalidators="field.validators"
                                                ng-if="field_type.tag == 'input'"
                                                />
                                         <textarea class="form-control"
@@ -122,12 +122,12 @@
                                                   placeholder="{{ field.placeholder }}"
                                                   ng-disabled="!field.is_editable"
                                                   ng-model="propertify('user_controller.' + field.model)" ng-model-options="{ getterSetter: true }"
-                                                  validators="field.validators"
+                                                  qvalidators="field.validators"
                                                   ng-if="field_type.tag == 'textarea'"
                                                   >
                                                   </textarea>
                                         <div class="error" for="id_{{ field.name }}">
-                                            <!-- this will be populated by the "validators" directive above -->
+                                            <!-- this will be populated by the "qvalidators" directive above -->
                                         </div>
                                     </div>
                                 {% endverbatim ng %}
@@ -152,11 +152,7 @@
 
                 <div class="row">
                     <div class="col-md-8">
-                        {% verbatim ng %}
-                        user_controller.is_valid: {{ user_controller.is_valid }}<br/>
-                        {% endverbatim ng %}
-
-                        <input type="submit" value="submit" class="btn btn-primary voffset-8" ng-disabled="!user_controller.is_valid" ng-click=""/>
+                        <input type="submit" value="submit" class="btn btn-primary voffset-8" ng-disabled="!user_controller.is_valid" ng-click="user_controller.put_user()"/>
                     </div>
                 </div>
 

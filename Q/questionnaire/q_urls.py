@@ -51,6 +51,9 @@ services_urls = [
     # routing http calls through a proxy...
     url(r'^proxy/$', q_proxy, name="proxy"),
 
+    # validating forms...
+    url(r'^validate/$', q_validate, name="validate"),
+
     # logging data from the client...
     url(r'^log/$', q_log, name="log"),
 

@@ -14,7 +14,7 @@
     /* RUN */
     /*******/
 
-    app.run(function($rootScope) {
+    app.run(["$rootScope", function($rootScope) {
 
         /* in general, services/factories are preferred to run for sharing functionality */
         /* b/c run doesn't isolate scope, but this code doesn't modify scope, so I don't care */
@@ -110,7 +110,8 @@
                 return FIELD_TYPES[_DEFAULT_FIELD_TYPE_KEY];
             }
         } ;
-    });
+
+    }]);
 
     /***************/
     /* CONTROLLERS */
@@ -122,32 +123,16 @@
 
     app.factory('$global_services', ['$http', function($http) {
 
-        /*****************************/
-        /* global app-wide variables */
-        /*****************************/
-
         var _blocking = false;
 
         var _is_loaded = false;
 
 	    var _DATA =  {};  /* (top-level controller resets this) */
 
-        /**************/
-        /* global fns */
-        /**************/
-
-        /***********************/
-        /* services to provide */
-        /***********************/
-
-        /* note: ng likes camelCase but I like under_scores */
-
 	    return {
             /* (re)load data */
             load: function(url) {
-                /* I have to use promises b/c $http is asynchronous */
-                /* that's probably for the best */
-                /* (see http://stackoverflow.com/questions/12505760/processing-http-response-in-service) */
+                /* TODO: UPDATE THIS FN W/ NEW "$q" SERVICE */
                 var promise = $http.get(url, {format: "json"})
                     .success(function (data) {
                         _DATA = data;
@@ -179,13 +164,65 @@
 
     }]);
 
+    app.factory('$qvalidators', ['$http', function($http) {
+
+        /* be wary of using too many asynchronous validators... they can make things slow */
+
+        function asynchronous_validator(data, promise) {
+            var asynchronous_validator_url = "/services/validate/";
+            $http({
+                method: "POST",
+                url: asynchronous_validator_url,
+                data: data
+            }).then(
+                /* success block */
+                function(response) {
+                    if (response.data == true) {
+                        return promise.resolve()
+                    }
+                    else {
+                        return promise.reject()
+                    }
+                },
+                /* error block */
+                function(response){
+                    /* TODO: SHOULD I REALLY LET ERRORS PASS ? */
+                    console.log(response)
+                    return promise.resolve();
+                }
+            );
+        }
+
+	    return {
+
+            /*****************************************/
+            /* define all form/field validators here */
+            /*****************************************/
+
+            validate_not_foo: function(old_value, new_value) {
+                return new_value.toLowerCase() != "foo";
+            },
+
+            validate_not_bar: function(old_value, new_value, promise) {
+                var validator_data = $.param({
+                    validator: "validate_not_bar",
+                    old_value: old_value,
+                    new_value: new_value
+                });
+                return asynchronous_validator(validator_data, promise);
+            }
+
+        };
+
+    }]);
+
     /**************/
     /* DIRECTIVES */
     /**************/
 
-    /********************************************/
-    /* run some fn after a DOM element is ready */
-    /********************************************/
+    /**********************************************/
+    /* run some fn _after_ a DOM element is ready */
+    /**********************************************/
 
     /* thanks to: https://stackoverflow.com/a/29571230/1060339 */
 
@@ -233,16 +270,15 @@
         }
     }]);
 
-
     /**************************/
     /* dynamic error handling */
     /**************************/
 
-    app.directive('validators', ['$compile', function($compile) {
+    app.directive('qvalidators', ['$compile', '$qvalidators', '$q', function($compile, $qvalidators, $q) {
         return {
             require: ['^form', 'ngModel'],
             scope: {
-                validators: "="
+                validators: "=qvalidators"
             },
             transclude: true,
             link: function(scope, elm, attrs, ctrls) {
@@ -253,13 +289,12 @@
                     console.log("WARNING: unable to find an error section for " + elm.attr("id"));
                 }
                 $.each(scope.validators, function(i, validator) {
+                    var validator_fn = $qvalidators[validator.fn_name]
                     if (validator.asynchronous) {
-                        console.log("TODO: " + validator.name + " is asynchronous")
                         ctrl.$asyncValidators[validator.name] = function(modelValue, viewValue) {
-                            if (ctrl.$isEmpty(modelValue)) {
-                                return true;
-                            }
-                            return validator.fn(modelValue, viewValue);
+                            var deferred = $q.defer();
+                            validator_fn(modelValue, viewValue, deferred)
+                            return deferred.promise;
                         }
                     }
                     else {
@@ -267,47 +302,17 @@
                             if (ctrl.$isEmpty(modelValue)) {
                                 return true;
                             }
-                            return validator.fn(modelValue, viewValue);
+                            return validator_fn(modelValue, viewValue);
                         };
                     }
                     var error_class = [form.$name, ctrl.$name, "$error", validator.name].join(".");
                     var error_content = "<div class='error_msg' ng-show='" + error_class + "'>" + validator.msg + "</div>"
-                    var compiled_error_content = $compile(error_content)(scope.$parent) /* note I'm compiling against the controller's scope instead of the directive's isolated scope */
+                    var compiled_error_content = $compile(error_content)(scope.$parent)
                     error_elm.append(compiled_error_content);
                 });
             }
         };
     }]);
-
-//    /******************************/
-//    /* server-side error handling */
-//    /******************************/
-//
-//    app.directive('servererror', function() {
-//        /* this is a bit confusing... */
-//        /* "QForm.add_server_errors_to_field" adds this directive to any field that can produce a server error */
-//        /* "QForm.add_custom_errors" adds placeholders to the djangular-generated error elements for fields */
-//        /* where there is a server error, the DRF API will return a JSON array of errors keyed by field_name */
-//        /* it is the responsibility of the submit fn to add those errors to the global $scope.server_errors array */
-//        /* (which is what the aforementioned placeholders point to); it is also its responsibility to change the validity of djangular fields */
-//        /* finally, this directive adds a watch on the field's underlying ng-model; the first time it changes after a server error, its validity is reset */
-//        return {
-//            restrict: "A",
-//            require: "ngModel",
-//            require: '^form',  /* this makes sure that "ctrl" below is an ng-form element */
-//            link: function(scope, element, attrs, ctrl) {
-//                var model = attrs["ngModel"];
-//                var field_name = attrs["name"];
-//                scope.$watch(model, function () {
-//                    if ($(element).hasClass("ng-invalid-server")) {
-//                        ctrl[field_name].$setValidity('server', true);
-//                        $(element).removeClass("ng-invalid-server");
-//                    }
-//                });
-//            }
-//        }
-//    });
-
 
     /********************/
     /* make help pretty */

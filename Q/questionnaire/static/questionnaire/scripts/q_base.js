@@ -104,22 +104,7 @@ function sort_objects_by_attr(objs, attr) {
 /* begin validators */
 /********************/
 
-function validate_no_reserved_words(old_value, new_value) {
-  if (RESERVED_WORDS.indexOf(new_value) != -1) {
-        return false;
-    }
-    else {
-        return true;
-    }
-}
-
-function validate_not_foo(old_value, new_value) {
-    return new_value.toLowerCase() != "foo";
-}
-
-function validate_servererror(old_value, new_value) {
-    return new_value.toLowerCase() != "bar";
-}
+/* note that validators are now defiend in "q_ng_base.js" as part of the "$qvalidators" service */
 
 /******************/
 /* end validators */
