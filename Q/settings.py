@@ -36,7 +36,6 @@ parser.read(CONF_PATH)
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = parser.get('settings', 'secret_key', raw=True)
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = parser.getboolean('debug', 'debug')
 OBFUSCATE = parser.getboolean('debug', 'obfuscate')
 PROFILE = parser.getboolean('debug', 'profile')
@@ -80,12 +79,10 @@ INSTALLED_APPS = [
     # compress & compile static files...
     'compressor',
     # restful api...
+    'crispy_forms',
     'django_filters',
     'rest_framework',
     'rest_framework_mongoengine',
-    # integrate django & angular...
-    'djng',
-    'crispy_forms',
     # mindmaps app...
     'mindmaps',
     # questionnaire app...
@@ -97,7 +94,6 @@ INSTALLED_APPS = [
     # TODO: ES-DOC WANTS GITHUB (AND NOT GOOGLE) AUTHENTICATION
     # 'allauth.socialaccount.providers.github',
     # 'allauth.socialaccount.providers.google',
-
 ]
 
 MIDDLEWARE = [
@@ -147,8 +143,8 @@ TEMPLATES = [
     },
 ]
 
-# reguired for newer version of django-angular...
-FORM_RENDERER = 'djng.forms.renderers.DjangoAngularBootstrap3Templates'
+# no longer needed; no longer using django-angular...
+# FORM_RENDERER = 'djng.forms.renderers.DjangoAngularBootstrap3Templates'
 
 # API
 
@@ -247,6 +243,7 @@ ACCOUNT_ADAPTER = 'Q.questionnaire.q_auth.QAccountAdapter'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 SOCIALACCOUNT_PROVIDERS = {
+    # can enable/disable these in the admin
     'google': {
         'SCOPE': ['email'],
         'AUTH_PARAMS': {
@@ -287,7 +284,7 @@ STATIC_URL = '/static/'
 COMPRESS_ENABLED = True
 COMPRESS_ROOT = STATIC_ROOT
 COMPRESS_URL = STATIC_URL
-COMPRESS_OFFLINE = True  # if template variables are used nside {% compress %} tags, they must be listed here !!
+COMPRESS_OFFLINE = True  # if template variables are used inside {% compress %} tags, they must be listed here !!
 COMPRESS_PRECOMPILERS = (
     ('text/coffeescript', 'coffee --compile --stdio'),
     ('text/less', 'lessc {infile} {outfile}'),
