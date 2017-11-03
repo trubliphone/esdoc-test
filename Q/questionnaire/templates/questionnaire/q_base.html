@@ -43,13 +43,15 @@
                 {% if cdn %}
                     <script src="//code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
                     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"></script>
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.6.6/angular-sanitize.min.js" integrity="sha256-zfJPgQ2q1sgTMVjlfR+txmTxEJC1lS853rSACpkN8jY=" crossorigin="anonymous"></script>
+                    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.6.6/angular-sanitize.min.js" integrity="sha256-zfJPgQ2q1sgTMVjlfR+txmTxEJC1lS853rSACpkN8jY=" crossorigin="anonymous"></script>
+                    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js" integrity="sha256-tyfWW2LtJQNI+l3F0h6xDV/ij6Mfn8lwSKHWOsmEgXM=" crossorigin="anonymous"></script>
                     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
                     <script src="//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js" integrity="sha256-4F7e4JsAJyLUdpP7Q8Sah866jCOhv72zU5E8lIRER4w=" crossorigin="anonymous"></script>
                 {% else %}
                     <script type="text/javascript" src="{% static 'questionnaire/scripts/jquery-3.2.1.min.js' %}"></script>
                     <script type="text/javascript" src="{% static 'questionnaire/scripts/angular-1.6.6.min.js' %}"></script>
                     <script type="text/javascript" src="{% static 'questionnaire/scripts/angular-sanitize-1.6.6.min.js' %}"></script>
+                    <script type="text/javascript" src="{% static 'questionnaire/scripts/ui-bootstrap-tpls-2.5.0.min.js' %}"></script>
                     <script type="text/javascript" src="{% static 'questionnaire/scripts/bootstrap-3.3.7.min.js' %}"></script>
                     <script type="text/javascript" src="{% static 'questionnaire/scripts/bootbox.min.js' %}"></script>
                 {% endif %}  {# /cdn #}
@@ -79,11 +81,11 @@
                             function() {
 
                                 /* in old versions of the Q there was loads of long & complex JQuery code to setup all the interactivity */
-                                /* now there are only a small number of fns (defined in "q_base.js"), and those are written very efficiently */
+                                /* since moving to ng, there is hardly any (defined in "q_base.js"), and it's written very efficiently */
                                 /* hooray! */
 
                                 var parent = document.body;
-                                init_widgets(helps, $(parent).find(".help.glyphicon"));
+                                //init_widgets(helps, $(parent).find(".help"));
                             }
                         );
 

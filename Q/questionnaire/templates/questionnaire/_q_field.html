@@ -1,0 +1,52 @@
+{# _q_field.html #}
+
+{# snippet for a single Q field #}
+{# is applied w/in an ng-repeat context #}
+
+
+<div ng-init="field_type=get_field_type(field.type)">
+    <!-- assumes I have bound the ng-variables: 'field', and 'controller' -->
+    {% verbatim ng %}
+        <div class="col-md-3">
+            <span ng-show="field.help_text && !field.inline_help" class="help glyphicon glyphicon-info-sign" popover popover-text="{{ field.help_text }}"></span>
+            <label for="id_{{ field.name }}" ng-class="field.is_required ? 'required' : 'optional'">{{ field.title }}:&nbsp;</label>
+            <p ng-show="field.help_text && field.inline_help" class="help" ng-bind-html="field.help_text"></p>
+        </div>
+        <div class="col-md-9">
+            <input class="form-control" type="{{ field_type.type }}"
+                   name="{{ field.name }}" id="id_{{ field.name }}"
+                   placeholder="{{ field.placeholder }}"
+                   ng-disabled="!field.is_editable"
+                   ng-model="propertify('user_controller.' + field.model)" ng-model-options="{ getterSetter: true }"
+                   qvalidators="field.validators"
+                   ng-if="field_type.tag == 'input'"
+                   />
+            <textarea class="form-control"
+                      name="{{ field.name }}" id="id_{{ field.name }}"
+                      placeholder="{{ field.placeholder }}"
+                      ng-disabled="!field.is_editable"
+                      ng-model="propertify('user_controller.' + field.model)" ng-model-options="{ getterSetter: true }"
+                      qvalidators="field.validators"
+                      ng-if="field_type.tag == 'textarea'"
+                      >
+                      </textarea>
+            <select class="form-control"
+                    name="{{ field.name }}" id="id_{{ field.name }}"
+                    ng-disabled="!field.is_editable"
+                    ng-model="propertify('user_controller.' + field.model)" ng-model-options="{ getterSetter: true }"
+                    qvalidators="field.validators"
+                    ng-if="field_type.tag == 'select'"
+            ></select>
+            <select class="form-control" enumeration
+                    name="{{ field.name }}" id="id_{{ field.name }}"
+                    ng-model="propertify('user_controller.' + field.model)" ng-model-options="{ getterSetter: true }"
+                    ng-disabled="!field.is_editable"
+                    ng-if="field_type.tag == 'select'">
+                <option ng-repeat="enumeration in field.enumeration_members | orderBy:'order'" value="{{enumeration.value}}">{{enumeration.title}}</option>
+            </select>
+            <div class="error" for="id_{{ field.name }}">
+                <!-- this will be populated by the "qvalidators" directive above -->
+            </div>
+        </div>
+    {% endverbatim ng %}
+</div>

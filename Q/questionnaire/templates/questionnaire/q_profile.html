@@ -10,7 +10,6 @@
     {{ block.super }}
     {% compress js %}
         <script type="text/javascript" src="{% static 'questionnaire/scripts/q_ng_users.js' %}"></script>
-    {% endcompress %}
         <script language="JavaScript">
 
             var user_id = "{{ user.id }}";
@@ -24,13 +23,8 @@
             );
 
         </script>
+    {% endcompress %}
 {% endblock %}  {# /scripts #}
-
-{% block style %}
-    {{ block.super }}
-    <style type="text/css">
-    </style>
-{% endblock %}  {# /style #}
 
 {% block content %}
 
@@ -99,41 +93,15 @@
                 </div>
 
                 <div class="row">
+
                     <div class="col-md-8">
                         <form name="user_form" novalidate watch-form-validity="user_controller.is_valid">
                             <div class="row " ng-repeat="field in user_controller.fields | orderBy:'order'" ng-show="field.is_displayed" ng-class-odd="'odd'" ng-class-even="'even'" ng-init="field_type=get_field_type(field.type)">
-                                {% verbatim ng %}
-                                    <div class="col-md-3">
-                                        <span ng-hide="field.inline_help" class="help glyphicon glyphicon-info-sign" popover popover-text="{{ field.help_text }}"></span>
-                                        <label for="id_{{ field.name }}" ng-class=" field.is_required ? 'required' : 'optional'">{{ field.title }}:&nbsp;</label>
-                                        <p ng-show="field.inline_help" class="help" ng-bind-html="field.help_text"></p>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <input class="form-control" type="{{ field_type.type }}"
-                                               name="{{ field.name }}" id="id_{{ field.name }}"
-                                               placeholder="{{ field.placeholder }}"
-                                               ng-disabled="!field.is_editable"
-                                               ng-model="propertify('user_controller.' + field.model)" ng-model-options="{ getterSetter: true }"
-                                               qvalidators="field.validators"
-                                               ng-if="field_type.tag == 'input'"
-                                               />
-                                        <textarea class="form-control"
-                                                  name="{{ field.name }}" id="id_{{ field.name }}"
-                                                  placeholder="{{ field.placeholder }}"
-                                                  ng-disabled="!field.is_editable"
-                                                  ng-model="propertify('user_controller.' + field.model)" ng-model-options="{ getterSetter: true }"
-                                                  qvalidators="field.validators"
-                                                  ng-if="field_type.tag == 'textarea'"
-                                                  >
-                                                  </textarea>
-                                        <div class="error" for="id_{{ field.name }}">
-                                            <!-- this will be populated by the "qvalidators" directive above -->
-                                        </div>
-                                    </div>
-                                {% endverbatim ng %}
+                                {% include "questionnaire/_q_field.html" %}
                             </div>
                         </form>
                     </div>
+
                     <div class="col-md-4">
                         <div class="list-group small">
                             <span class="list-group-item active">Project Affiliations:</span>
@@ -148,6 +116,7 @@
                             </li>
                         </div>
                     </div>
+
                 </div>
 
                 <div class="row">
@@ -174,4 +143,3 @@
     </div>  <!-- /ng-app -->
 
 {% endblock %}  {# /content #{
-
