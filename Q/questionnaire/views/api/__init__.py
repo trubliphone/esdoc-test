@@ -10,6 +10,8 @@
 
 from rest_framework import routers
 
+from Q.questionnaire.views.api.views_api_lite import QProjectLiteViewSet
+from Q.questionnaire.views.api.views_api_projects import QProjectViewSet
 from Q.questionnaire.views.api.views_api_users import QUserProfileViewSet
 from Q.questionnaire.views.api.views_api_tests import QTestPostgresModelViewSet
 from Q.questionnaire.views.api.views_api_tests import QTestMongodbModelViewSet
@@ -19,6 +21,9 @@ from Q.questionnaire.views.api.views_api_tests import QTestMongodbModelViewSet
 
 q_api_router = routers.DefaultRouter()
 
+q_api_router.register(r'qprojectlite', QProjectLiteViewSet, r'qprojectlite')
+
+q_api_router.register(r'qproject', QProjectViewSet, r'qproject')
 q_api_router.register(r'quserprofile', QUserProfileViewSet, r'quserprofile')
 
 q_api_router.register(r'qtestmongodbmodel', QTestMongodbModelViewSet, r'qtestmongodbmodel')

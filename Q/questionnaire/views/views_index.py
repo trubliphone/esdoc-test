@@ -16,7 +16,12 @@ def q_index(request):
 
     # context = add_parameters_to_context(request)
 
-    context = {}
+    read_only = False
+
+    context = {
+        "read_only": read_only,
+    }
+
     return render(request, 'questionnaire/q_index.html', context)
 
 

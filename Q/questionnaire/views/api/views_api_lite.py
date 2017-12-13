@@ -8,20 +8,15 @@
 #   This project is distributed according to the terms of the MIT license [http://www.opensource.org/licenses/MIT].
 ####################
 
-# from django.contrib.auth.models import User
-
-from django_filters import FilterSet, CharFilter
 from rest_framework import permissions, viewsets
 
-
-from Q.questionnaire.models.models_users import QUserProfile
-from Q.questionnaire.serializers.serializers_lite import QUserProfileLiteSerializer
-from Q.questionnaire.views.api.views_api_base import BetterBooleanFilter
+from Q.questionnaire.models.models_projects import QProject
+from Q.questionnaire.serializers.serializers_lite import QProjectLiteSerializer
 
 
-class QModelLitePermission(permissions.BasePermission):
+class QLitePermission(permissions.BasePermission):
     """
-    Custom permission to only allow owners of an object to edit it.
+    Lite Serializers are read-only
     """
 
     def has_object_permission(self, request, view, obj):
@@ -29,39 +24,11 @@ class QModelLitePermission(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
         # nobody can submit PUT, POST, or DELETE requests
-        # (this is the "lite" serialization, after all)
         return False
 
 
-class QUserProfileLiteFilter(FilterSet):
+class QProjectLiteViewSet(viewsets.ModelViewSet):
+    serializer_class = QProjectLiteSerializer
+    permission_classes = [QLitePermission]
+    queryset = QProject.objects.filter(is_active=True, is_displayed=True)
 
-    class Meta:
-        model = QUserProfile
-        fields = [
-            'id',
-            'username',
-            'is_active',
-            'is_staff',
-            'is_superuser',
-        ]
-
-    is_active = BetterBooleanFilter(name="user__is_active")
-    is_staff = BetterBooleanFilter(name="user__is_staff")
-    is_superuser = BetterBooleanFilter(name="user__is_superuser")
-    username = CharFilter(name='user__username')
-
-
-    @classmethod
-    def get_field_names(cls):
-        """
-        Simple way to make sure that _all_ filtered fields
-        are available to the views below
-        """
-        return tuple(cls.Meta.fields)
-
-
-class QUserProfileLiteViewSet(viewsets.ModelViewSet):
-    serializer_class = QUserProfileLiteSerializer
-    permission_classes = [QModelLitePermission]
-    queryset = QUserProfile.objects.all()
-    filter_class = QUserProfileLiteFilter
