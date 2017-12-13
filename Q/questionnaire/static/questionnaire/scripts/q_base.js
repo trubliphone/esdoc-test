@@ -11,7 +11,7 @@
 /**************************************/
 
 /* b/c the Q is so dynamic, new JQuery widgets may need to be initialized at run-time */
-/* these fns takes care of that */
+/* these fns takes care of that (although since moving to ng, there is hardly any need for them) */
 
 function init_widgets(init_fn, elements, force_init) {
     force_init = typeof force_init !== 'undefined' ? force_init : false;
@@ -23,16 +23,6 @@ function init_widgets(init_fn, elements, force_init) {
         }
     });
 }
-
-function helps(element) {
-    $(element).popover({
-        "placement": "top",
-        "html": true,
-        "trigger": "focus"
-    });
-}
-
-
 
 /**************************************/
 /* end jquery widget initialization */
@@ -96,6 +86,23 @@ function sort_objects_by_attr(objs, attr) {
     return sorted_objs;
 }
 
+function get_object_by_attrs(objs, attrs) {
+    for(var i=0; i<objs.length; i++) {
+        var match = true
+        var obj = objs[i];
+        for (var k in attrs) {
+            if (!obj.hasOwnProperty(k) || obj[k] != attrs[k]) {
+                match = false;
+                break;
+            }
+        }
+        if (match) {
+            return obj;
+        }
+    }
+    return null;
+}
+
 /*******************/
 /* end utility fns */
 /*******************/
@@ -104,7 +111,7 @@ function sort_objects_by_attr(objs, attr) {
 /* begin validators */
 /********************/
 
-/* note that validators are now defiend in "q_ng_base.js" as part of the "$qvalidators" service */
+/* note that validators are now defined in "q_ng_base.js" as part of the "$qvalidators" service */
 
 /******************/
 /* end validators */

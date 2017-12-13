@@ -1,5 +1,6 @@
 from Q.questionnaire.views.services.views_services_log import q_log
 from Q.questionnaire.views.services.views_services_messages import get_django_messages
 from Q.questionnaire.views.services.views_services_proxy import q_proxy
+from Q.questionnaire.views.services.views_services_static import q_serialize_static_project, q_serialize_static_user_profile
 from Q.questionnaire.views.services.views_services_users import q_send_email_confirmation
 from Q.questionnaire.views.services.views_services_validators import q_validate

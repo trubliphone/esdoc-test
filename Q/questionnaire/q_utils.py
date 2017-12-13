@@ -241,22 +241,8 @@ def remove_spaces_and_linebreaks(strng):
     return ' '.join(strng.split())
 
 
-def pretty_string(strng):
-    """
-    break camelCase string into words
-    and turns underscores into spaces
-    :param string:
-    :return:
-    """
-
-    pretty_string_re_1 = re.compile('(.)([A-Z][a-z]+)')
-    pretty_string_re_2 = re.compile('([a-z0-9])([A-Z])')
-
-    s1 = pretty_string_re_1.sub(r'\1 \2', strng)
-    s2 = pretty_string_re_2.sub(r'\1 \2', s1)
-    s3 = s2.replace('_', ' ')
-
-    return s3.title()
+pretty_string_re_1 = re.compile('(.)([A-Z][a-z]+)')
+pretty_string_re_2 = re.compile('([a-z0-9])([A-Z])')
 
 
 def convert_to_camelCase(strng):
@@ -275,6 +261,24 @@ def convert_to_PascalCase(strng):
         return tmp_string[0].upper() + tmp_string[1:]
     else:
         return tmp_string[0].upper()
+
+
+def convert_to_snake_case(string):
+    re_1 = re.compile('(.)([A-Z][a-z]+)')
+    re_2 = re.compile('([a-z0-9])([A-Z])')
+
+    s1 = re_1.sub(r'\1_\2', string)
+    s2 = re_2.sub(r'\1_\2', s1)
+
+    return s2.lower()
+
+
+def pretty_string(strng):
+
+    s1 = convert_to_snake_case(string)
+    s2 = s1.replace('_', ' ')
+
+    return s2.title()
 
 
 @legacy_code

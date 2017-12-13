@@ -58,7 +58,11 @@ services_urls = [
     url(r'^log/$', q_log, name="log"),
 
     # setting up users...
-    url(r'^accounts/send_email_confirmation/$', q_send_email_confirmation)
+    url(r'^accounts/send_email_confirmation/$', q_send_email_confirmation),
+
+    # 'faking' static models...
+    url(r'^static/quserprofile/$', q_serialize_static_user_profile),
+    url(r'^static/qproject/$', q_serialize_static_project),
 
 ]
 

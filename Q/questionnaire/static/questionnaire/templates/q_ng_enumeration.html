@@ -1,0 +1,17 @@
+<div class="enumeration">
+    <div class="enumeration_header" ng-click="is_open = !is_open" ng-disabled="is_disabled || current_model.is_nil">
+        <span ng-show="is_open" class="glyphicon glyphicon-triangle-bottom"></span>
+        <span ng-hide="is_open" class="glyphicon glyphicon-triangle-right"></span>
+        <!-- ng-bind automagically includes HTML in strings (via $sce.trustedHtml in the "enumeration" directive -->
+        &nbsp;<span ng-bind-html="get_enumeration_title()"/>
+    </div>
+    <ul class="enumeration_content list-group" ng-show="is_open">
+        <li class="list-group-item" ng-repeat="choice in enumerationChoices | orderBy:'order'" ng-class="{'selected': choice.is_active}">
+            <label ng-class="{'disabled': is_disabled || current_model.is_nil}">
+                <input type="checkbox" ng-model="choice.is_active" ng-disabled="is_disabled || current_model.is_nil" ng-click="select_choice(choice)"/>
+                {{ choice.title }}
+                <span ng-show="choice.documentation" class="help glyphicon glyphicon-info-sign" popover popover-text="{{ choice.documentation }}"></span>
+            </label>
+        </li>
+    </ul>
+</div>

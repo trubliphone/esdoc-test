@@ -10,6 +10,7 @@
     {{ block.super }}
     {% compress js %}
         <script type="text/javascript" src="{% static 'questionnaire/scripts/q_ng_users.js' %}"></script>
+    {% endcompress %}
         <script language="JavaScript">
 
             var user_id = "{{ user.id }}";
@@ -23,7 +24,6 @@
             );
 
         </script>
-    {% endcompress %}
 {% endblock %}  {# /scripts #}
 
 {% block content %}
@@ -93,10 +93,13 @@
                 </div>
 
                 <div class="row">
-
                     <div class="col-md-8">
                         <form name="user_form" novalidate watch-form-validity="user_controller.is_valid">
-                            <div class="row " ng-repeat="field in user_controller.fields | orderBy:'order'" ng-show="field.is_displayed" ng-class-odd="'odd'" ng-class-even="'even'" ng-init="field_type=get_field_type(field.type)">
+                            {# TODO: ACCORDING TO "https://stackoverflow.com/a/36230291/1060339" #}
+                            {# TODO: "ng-repeat" RUNS BEFORE "ng-init", THEREFORE I NEED TO MAKE SURE "proxy" IS SET BEFORE "customization" #}
+                            <div class="row" ng-class-odd="'odd'" ng-class-even="'even'"
+                                 ng-repeat="customization in user_controller.customization['properties']" ng-show="customization.is_displayed"
+                                 ng-init="proxy=user_controller.proxy['properties'][$index]; realization=propertify('user_controller.realization' + customization.path);">
                                 {% include "questionnaire/_q_field.html" %}
                             </div>
                         </form>
@@ -121,10 +124,9 @@
 
                 <div class="row">
                     <div class="col-md-8">
-                        <input type="submit" value="submit" class="btn btn-primary voffset-8" ng-disabled="!user_controller.is_valid" ng-click="user_controller.put_user()"/>
+                        <input type="submit" value="submit" class="btn btn-primary voffset-8" ng-disabled="!user_controller.is_valid" ng-click="user_controller.submit()"/>
                     </div>
                 </div>
-
 
                 {# TODO: DELETE THIS EVENTUALLY #}
                 {% if debug %}
@@ -143,3 +145,4 @@
     </div>  <!-- /ng-app -->
 
 {% endblock %}  {# /content #{
+

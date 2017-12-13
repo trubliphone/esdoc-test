@@ -59,6 +59,24 @@
     color: @brand-danger;
 }
 
+/* allow for colored modals */
+
+.modal-content.success {
+    background-color: lighten(@brand-primary, 40%);
+}
+
+.modal-content.error {
+    background-color: lighten(@brand-danger, 40%);
+}
+
+.modal-content.warning {
+    background-color: lighten(@brand-warning, 40%);
+}
+
+.modal-content.info {
+    background-color: lighten(@brand-info, 40%);
+}
+
 /* make greyed out images _really_ greyed out */
 
 .glyphicon.text-muted {

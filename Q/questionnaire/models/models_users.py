@@ -3,10 +3,10 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
+from Q.questionnaire.models.models_base import QPostgresModel
 from Q.questionnaire import APP_LABEL, q_logger
 
-
-class QUserProfile(models.Model):
+class QUserProfile(QPostgresModel):
 
     class Meta:
         app_label = APP_LABEL

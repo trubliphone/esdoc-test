@@ -103,13 +103,20 @@
 
         /* begin pretty tables & forms */
 
+        input.form-control {
+            &[type='checkbox'], &[type='radio'] {
+                width: @input-height-base / 1.6;
+                height: @input-height-base / 1.6;
+            }
+            &[type='number'] {
+                width: 25%;
+            }
+        }
+
         textarea.form-control {
             resize: vertical;
         }
 
-        input.form-control {
-
-        }
 
         select.form-control {
 
@@ -134,6 +141,39 @@
         }
 
         /* end pretty tables */
+
+        /* begin enumerations */
+
+        .enumeration {
+            .enumeration_header {
+                .btn;
+                .btn-sm;
+                .btn-primary;
+                text-align: left;
+                white-space: normal;  /* this forces btn to word-wrap */
+                min-height: @input-height-base;
+                width: 100%;
+            }
+            ul {
+                width: 100%;
+                li {
+                    label {
+                        width: 100%;
+                        .help {
+                            .pull-right;
+                        }
+                    }
+                    label.disabled {
+                        color: @text-muted;
+                    }
+                }
+                li.selected {
+                    background-color: @state-info-bg;
+                }
+            }
+        }
+
+        /* end enumerations */
 
     }  /* /.content */
 

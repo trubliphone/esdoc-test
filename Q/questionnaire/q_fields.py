@@ -11,6 +11,96 @@ import re
 from Q.questionnaire.q_utils import Version
 from Q.questionnaire.q_constants import *
 
+FIELD_TYPES = {
+    "string": {
+        "tag": "input",
+        "title": "character string",
+        "type": "text",
+        "attrs": {}
+    },
+    "text": {
+        "tag": "textarea",
+        "title": "text",
+        "type": None,
+        "attrs": {
+            "rows": "4"
+        }
+    },
+    "bool": {
+        "tag": "input",
+        "title": "boolean value",
+        "type": "checkbox",
+        "attrs": {}
+    },
+    "int": {
+        "tag": "input",
+        "title": "integer",
+        "type": "number",
+        "attrs": {}
+    },
+    "float": {
+        "tag": "input",
+        "title": "floating-point number",
+        "type": "number",
+        "attrs": {}
+    },
+    "url": {
+        "tag": "input",
+        "title": "URL",
+        "type": "url",
+        "attrs": {}
+    },
+    "email": {
+        "tag": "input",
+        "title": "email address",
+        "type": "text",
+        "attrs": {}
+    },
+    "date": {
+        "tag": "input",
+        "title": "date",
+        "type": "text",
+        "attrs": {
+            "uib-datepicker-popup": None
+        }
+    },
+    "datetime": {
+        "tag": "input",
+        "title": "date and time",
+        "type": "text",
+        "attrs": {}
+    },
+    "time": {
+        "tag": "input",
+        "title": "time",
+        "type": "text",
+        "attrs": {}
+    },
+    "enumeration": {
+        "tag": "select",
+        "title": "enumeration",
+        "type": "text",
+        "attrs": {
+            "style": "display: none"
+        }
+    },
+    "relation": {
+        "tag": "input",
+        "title": "relation to other object",
+        "type": "text",
+        "attrs": {}
+    },
+    "reference": {
+        "tag": "input",
+        "title": "reference to other document",
+        "type": "text",
+        "attrs": {}
+    }
+}
+
+DEFAULT_FIELD_TYPE_KEY = "string"
+
+
 ###############
 # file fields #
 ###############
