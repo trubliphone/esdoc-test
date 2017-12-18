@@ -1,0 +1,131 @@
+{# q_index.html #}
+
+{% extends "questionnaire/q_base.html" %}
+
+{% load staticfiles %}
+{% load compress %}
+{% load q_tags %}
+
+{% block scripts %}
+    {{ block.super }}
+    {% compress js %}
+        <script type="text/javascript" src="{% static 'questionnaire/scripts/q_ng_project.js' %}"></script>
+    {% endcompress %}
+        <script language="JavaScript">
+
+            var read_only = {{ read_only|jsonify }};
+            var project_id = {{ project.pk }};
+            var project_name = "{{ project.name }}";
+
+            $(document).ready(
+                function() {
+                    /* TODO */
+                }
+            );
+
+        </script>
+{% endblock %}  {# /scripts #}
+
+{% block content %}
+
+    <div ng-app="q_project">
+        <div ng-controller="ProjectController as project_controller">
+
+            {# wrapping everything in a fieldset that can be cloaked during loading & deactivated during AJAX calls #}
+            <fieldset id="q_blocker" ng-disabled="project_controller.blocking() || project_controller.read_only" ng-cloak>
+
+                 <div class="title">
+                    {{ project.title }} ES-DOC Questionnaire Project
+                </div> <!-- /#title -->
+
+                <div class="row>">
+                    <div class="cold-md-12">
+                        <p>
+                            This is the Project Page for the
+                            {% if project.url %}
+                                <a href="{{ project.url }}">{{ project.title }}</a>
+                            {% else %}
+                                {{ project.title }}
+                            {% endif %} {# /project.url #}
+                            project.  Use this page for creating new documents or updating existing documents.
+                        </p>
+                        <p>
+                            {% if project.description %}
+                                <div class="row">
+                                    <div class="col-md-2 text-right">
+                                        <strong>Project Description:&nbsp;</strong>
+                                    </div>
+                                    <div class="col-md-10 text-left">
+                                        <em>{{ project.description }}</em>
+                                    </div>
+                                </div>
+                            {% endif %}  {# /project.description #}
+                        </p>
+                        <p>
+                            {% if project.email %}
+                                <div class="row">
+                                    <div class="col-md-2 text-right">
+                                        <strong>Project Contact:&nbsp;</strong>
+                                    </div>
+                                    <div class="col-md-10 text-left">
+                                        <span>{{ project.email|urlize }}</span>
+                                    </div>
+                                </div>
+                            {% endif %}  {# /project.description #}
+                        </p>
+                        <p>
+                            <a href="{% url 'help' %}">ES-DOC Questionnaire help</a> is available.
+                        </p>
+                        <p>
+                            {% if not project.authenticated %}
+                                <strong>Project does not require authentication.  Any user can create or modify a document or a customization.</strong>
+                            {% endif %} {# /project.authenticated #}
+                        </p>
+                        <p>
+                            {% if can_manage %}
+                                <a href="{% url 'project_manage' project_name=project.name %}" class="btn btn-xs btn-info">
+                                    Manage {{ project.title }} Project
+                                </a>
+                            {% endif %}  {# /can_manage #}
+                        </p>
+
+                        <p>
+                            {% if can_customize %}
+                                can customize
+                            {% endif %}  {# /can_customize #}
+                        </p>
+                        <p>
+                            {% if can_join %}
+                                <button class="btn btn-xs btn-info"
+                                        title="Your request will be sent to the project administrator for review."
+                                        ng-click="project_controller.project_join_request('{{ user.pk }}')">
+                                        Join {{ project.title }} Project
+                                </button>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>  <!-- /.row -->
+
+                <div class="row">
+                    <div class="col-md-12">
+                        stuff goes here
+                    </div>
+                </div>
+
+                {# TODO: DELETE THIS EVENTUALLY #}
+                {% if debug %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn btn-danger btn-xs pull-right" ng-click="project_controller.print_stuff()">
+                                <span class="glyphicon glyphicon-cog"></span>
+                            </button>
+                        </div>
+                    </div>
+                {% endif %}  {# /debug #}
+
+            </fieldset>  <!-- /#q_blocker -->
+
+        </div>  <!-- /ng-controller -->
+    </div>  <!-- /ng-app -->
+
+{% endblock %}  {# /content #}

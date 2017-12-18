@@ -16,13 +16,12 @@ account_urls = [
     # and adds some for dealing w/ Q-specific User Profiles
 
     # authentication...
-    url(r"^signup/$", account_views.signup, name="account_signup"),
+    url(r"^signup/$", QSignupView.as_view(), name="account_signup"),
     url(r"^login/$", QLoginView.as_view(), name="account_login"),
-    url(r"^logout/$", account_views.logout, name="account_logout"),
+    url(r"^logout/$", QLogoutView.as_view(), name="account_logout"),
 
     # 3rd party authentication...
     url(r"^social/", include('allauth.socialaccount.urls')),
-
 
     # disabled accounts...
     url(r"^inactive/$", account_views.account_inactive, name="account_inactive"),

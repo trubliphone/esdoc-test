@@ -1,4 +1,4 @@
-from allauth.account.views import SignupView, LoginView, PasswordResetView
+from allauth.account.views import SignupView, LoginView, PasswordResetView, LogoutView
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.shortcuts import render
@@ -11,6 +11,16 @@ from Q.questionnaire.views.views_errors import q_error
 class QLoginView(LoginView):
     redirect_field_name = "next"
     template_name = 'account/login.html'
+
+
+class QLogoutView(LogoutView):
+    redirect_field_name = "next"
+    template_name = "account/logout.html"
+
+
+class QSignupView(SignupView):
+    redirect_field_name = "next"
+    template_name = "account/signup.html"
 
 
 def q_profile(request, username=None):
